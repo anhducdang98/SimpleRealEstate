@@ -18,6 +18,8 @@ output-metadata.json
 
 # IntelliJ
 *.iml
+.gradle
+/local.properties
 .idea/
 misc.xml
 deploymentTargetDropDown.xml
@@ -32,3 +34,8 @@ google-services.json
 
 # Android Profiling
 *.hprof
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
