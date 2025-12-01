@@ -60,5 +60,5 @@ app/
 
 ## Testing
 
-- **Unit Tests**: JUnit, Mockito, Turbine (for Flow testing)
+- **Unit Tests**: JUnit, Mockito, Turbine
 - **UI Tests**: Compose UI Testing
