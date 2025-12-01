@@ -4,12 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.simplerealestate.core.util.Resource
 import com.example.simplerealestate.domain.usecase.GetPropertiesUseCase
+import com.example.simplerealestate.domain.usecase.ToggleLikeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 /**
@@ -18,7 +20,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class PropertyListViewModel @Inject constructor(
-    private val getPropertiesUseCase: GetPropertiesUseCase
+    private val getPropertiesUseCase: GetPropertiesUseCase,
+    private val toggleLikeUseCase: ToggleLikeUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<PropertyListUiState>(PropertyListUiState.Initial)
@@ -26,6 +29,12 @@ class PropertyListViewModel @Inject constructor(
 
     init {
         loadProperties()
+    }
+
+    fun onEvent(event: PropertyListEvent) {
+        when (event) {
+            is PropertyListEvent.ToggleLike -> toggleLike(event.propertyId)
+        }
     }
 
     fun loadProperties() {
@@ -38,5 +47,23 @@ class PropertyListViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun toggleLike(propertyId: String) {
+        val isNowLiked = toggleLikeUseCase(propertyId)
+        _uiState.update { currentState ->
+            if (currentState is PropertyListUiState.Success) {
+                val updatedProperties = currentState.properties.map { property ->
+                    if (property.id == propertyId) {
+                        property.copy(isLiked = isNowLiked)
+                    } else {
+                        property
+                    }
+                }
+                PropertyListUiState.Success(updatedProperties)
+            } else {
+                currentState
+            }
+        }
     }
 }

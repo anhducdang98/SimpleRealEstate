@@ -2,6 +2,7 @@ package com.example.simplerealestate.ui.features.propertylist
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import com.example.simplerealestate.domain.model.Attachment
 import com.example.simplerealestate.domain.model.AttachmentType
@@ -22,18 +23,26 @@ import com.example.simplerealestate.domain.model.Text
 fun ComposeTestRule.assertPropertyItemDisplayed(
     title: String,
     price: String,
-    address: String
+    address: String,
+    isLiked: Boolean
 ) {
     onNodeWithText(title).assertIsDisplayed()
     onNodeWithText(price).assertIsDisplayed()
     onNodeWithText(address).assertIsDisplayed()
+    val likeContentDescription = if (isLiked) {
+        "Remove from liked"
+    } else {
+        "Add to liked"
+    }
+    onNodeWithContentDescription(likeContentDescription).assertIsDisplayed()
 }
 
 fun createTestProperty(
     id: String = "1",
     title: String = "Test Property",
     formattedPrice: String = "CHF 500,000",
-    formattedAddress: String = "Test Street 1, 8000 Zurich"
+    formattedAddress: String = "Test Street 1, 8000 Zurich",
+    isLiked: Boolean = false
 ): Property {
     return Property(
         id = id,
@@ -68,7 +77,8 @@ fun createTestProperty(
                     text = Text(title = title),
                     bannerImage = "https://example.com/image.jpg"
                 )
-            )
-        )
+            ),
+        ),
+        isLiked = isLiked
     )
 }

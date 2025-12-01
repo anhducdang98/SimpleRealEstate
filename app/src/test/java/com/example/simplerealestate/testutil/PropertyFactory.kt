@@ -26,7 +26,8 @@ object PropertyFactory {
         street: String = "Test Street 1",
         locality: String = "Zurich",
         postalCode: String = "8000",
-        imageUrl: String = "https://example.com/image.jpg"
+        imageUrl: String = "https://example.com/image.jpg",
+        isLiked: Boolean = false
     ): Property {
         return Property(
             id = id,
@@ -62,7 +63,8 @@ object PropertyFactory {
                         bannerImage = imageUrl
                     )
                 )
-            )
+            ),
+            isLiked = isLiked
         )
     }
 }

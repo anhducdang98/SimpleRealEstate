@@ -9,4 +9,5 @@ import com.example.simplerealestate.domain.model.Property
  */
 interface PropertyRepository {
     suspend fun getProperties(): Resource<List<Property>>
+    fun toggleLike(propertyId: String): Boolean
 }

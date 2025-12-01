@@ -3,4 +3,6 @@
     <string name="property_list_title">Properties</string>
     <string name="property_list_error_message">There is an error. Please try again later!</string>
     <string name="property_list_retry">Retry</string>
+    <string name="content_description_add_to_liked">Add to liked</string>
+    <string name="content_description_remove_from_liked">Remove from liked</string>
 </resources>

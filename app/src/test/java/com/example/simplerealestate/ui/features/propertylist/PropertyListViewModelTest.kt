@@ -3,6 +3,7 @@ package com.example.simplerealestate.ui.features.propertylist
 import app.cash.turbine.test
 import com.example.simplerealestate.core.util.Resource
 import com.example.simplerealestate.domain.usecase.GetPropertiesUseCase
+import com.example.simplerealestate.domain.usecase.ToggleLikeUseCase
 import com.example.simplerealestate.testutil.PropertyFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,12 +28,14 @@ import org.mockito.kotlin.whenever
 class PropertyListViewModelTest {
 
     private lateinit var getPropertiesUseCase: GetPropertiesUseCase
+    private lateinit var toggleLikeUseCase: ToggleLikeUseCase
     private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         getPropertiesUseCase = mock()
+        toggleLikeUseCase = mock()
     }
 
     @After
@@ -46,7 +49,7 @@ class PropertyListViewModelTest {
         whenever(getPropertiesUseCase()).thenReturn(flow { })
 
         // when
-        val viewModel = PropertyListViewModel(getPropertiesUseCase)
+        val viewModel = PropertyListViewModel(getPropertiesUseCase, toggleLikeUseCase)
 
         // then
         assertEquals(PropertyListUiState.Initial, viewModel.uiState.value)
@@ -62,7 +65,7 @@ class PropertyListViewModelTest {
         })
 
         // when
-        val viewModel = PropertyListViewModel(getPropertiesUseCase)
+        val viewModel = PropertyListViewModel(getPropertiesUseCase, toggleLikeUseCase)
 
         // then
         viewModel.uiState.test {
@@ -87,7 +90,7 @@ class PropertyListViewModelTest {
         })
 
         // when
-        val viewModel = PropertyListViewModel(getPropertiesUseCase)
+        val viewModel = PropertyListViewModel(getPropertiesUseCase, toggleLikeUseCase)
 
         // then
         viewModel.uiState.test {
@@ -100,5 +103,28 @@ class PropertyListViewModelTest {
             val errorState = awaitItem()
             assertTrue(errorState is PropertyListUiState.Error)
         }
+    }
+
+    @Test
+    fun givenSuccessState_whenToggleLike_thenPropertyLikedStateUpdated() = runTest {
+        // given
+        val propertyId = "1"
+        val property = PropertyFactory.createProperty(id = propertyId, isLiked = false)
+        whenever(getPropertiesUseCase()).thenReturn(flow {
+            emit(Resource.Success(listOf(property)))
+        })
+        whenever(toggleLikeUseCase(propertyId)).thenReturn(true)
+
+        val viewModel = PropertyListViewModel(getPropertiesUseCase, toggleLikeUseCase)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // when
+        viewModel.onEvent(PropertyListEvent.ToggleLike(propertyId))
+
+        // then
+        val state = viewModel.uiState.value
+        assertTrue(state is PropertyListUiState.Success)
+        val updatedProperty = (state as PropertyListUiState.Success).properties.first()
+        assertTrue(updatedProperty.isLiked)
     }
 }

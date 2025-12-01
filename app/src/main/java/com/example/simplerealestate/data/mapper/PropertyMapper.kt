@@ -12,15 +12,18 @@ import com.example.simplerealestate.domain.model.Prices
 import com.example.simplerealestate.domain.model.Property
 import com.example.simplerealestate.domain.model.PropertyAddress
 import com.example.simplerealestate.domain.model.Text
+import java.text.NumberFormat
+import java.util.Locale
 
 /**
  * @author Dang Anh Duc
  * @since 01/12/2025
  */
-fun PropertyResultDto.toDomain(): Property {
+fun PropertyResultDto.toDomain(likedPropertyIds: Set<String> = emptySet()): Property {
     return Property(
         id = id,
         listingType = listingType?.let { ListingType(type = it.type) },
+        isLiked = likedPropertyIds.contains(id),
         listing = Listing(
             offerType = listing.offerType,
             prices = Prices(
@@ -61,10 +64,13 @@ fun PropertyResultDto.toDomain(): Property {
     )
 }
 
-fun List<PropertyResultDto>.toDomain(): List<Property> = map { it.toDomain() }
+fun List<PropertyResultDto>.toDomain(likedPropertyIds: Set<String> = emptySet()): List<Property> =
+    map { it.toDomain(likedPropertyIds) }
 
-private fun formatPrice(currency: String, price: Long): String =
-    "$currency ${String.format("%,d", price)}"
+private fun formatPrice(currency: String, price: Long): String {
+    val formattedNumber = NumberFormat.getNumberInstance(Locale.getDefault()).format(price)
+    return "$currency $formattedNumber"
+}
 
 private fun formatAddress(street: String?, locality: String?, region: String?): String =
     listOfNotNull(street, locality, region).joinToString(", ")

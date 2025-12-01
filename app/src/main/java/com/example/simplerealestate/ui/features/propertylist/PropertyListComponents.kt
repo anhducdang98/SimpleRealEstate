@@ -1,6 +1,7 @@
 package com.example.simplerealestate.ui.features.propertylist
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,9 +10,12 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -22,9 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.example.simplerealestate.R
 import com.example.simplerealestate.domain.model.Property
 
 /**
@@ -33,8 +39,9 @@ import com.example.simplerealestate.domain.model.Property
  */
 @Composable
 fun PropertyItem(
+    modifier: Modifier = Modifier,
     property: Property,
-    modifier: Modifier = Modifier
+    onLikeClick: (String) -> Unit = {}
 ) {
     val listing = property.listing
     val imageUrl = listing.localization.de?.bannerImage
@@ -63,6 +70,13 @@ fun PropertyItem(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .padding(8.dp)
+                )
+                LikeButton(
+                    isLiked = property.isLiked,
+                    onClick = { onLikeClick(property.id) },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(12.dp)
                 )
             }
             Column(
@@ -104,8 +118,8 @@ fun PropertyItem(
 
 @Composable
 private fun PriceTag(
-    price: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    price: String
 ) {
     Text(
         text = price,
@@ -116,4 +130,30 @@ private fun PriceTag(
             .background(MaterialTheme.colorScheme.primary)
             .padding(horizontal = 8.dp, vertical = 4.dp)
     )
+}
+
+@Composable
+private fun LikeButton(
+    modifier: Modifier = Modifier,
+    isLiked: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .size(36.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surface)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+            contentDescription = stringResource(
+                if (isLiked) R.string.content_description_remove_from_liked
+                else R.string.content_description_add_to_liked
+            ),
+            tint = if (isLiked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.size(24.dp)
+        )
+    }
 }

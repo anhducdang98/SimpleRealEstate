@@ -7,7 +7,8 @@ package com.example.simplerealestate.domain.model
 data class Property(
     val id: String,
     val listingType: ListingType?,
-    val listing: Listing
+    val listing: Listing,
+    val isLiked: Boolean = false
 )
 
 data class ListingType(

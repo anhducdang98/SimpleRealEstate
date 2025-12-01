@@ -1,7 +1,9 @@
 package com.example.simplerealestate.ui.features.propertylist
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -49,7 +51,6 @@ class PropertyListScreenTest {
             SimpleRealEstateTheme {
                 PropertyListContent(
                     uiState = uiState,
-                    onRetryClick = {}
                 )
             }
         }
@@ -59,27 +60,7 @@ class PropertyListScreenTest {
     }
 
     @Test
-    fun givenErrorState_whenScreenDisplayed_thenShowErrorMessageAndRetryButton() {
-        // given
-        val uiState = PropertyListUiState.Error
-
-        // when
-        composeTestRule.setContent {
-            SimpleRealEstateTheme {
-                PropertyListContent(
-                    uiState = uiState,
-                    onRetryClick = {}
-                )
-            }
-        }
-
-        // then
-        composeTestRule.onNodeWithTag(PropertyListTestTags.ERROR_CONTENT).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Retry").assertIsDisplayed()
-    }
-
-    @Test
-    fun givenErrorState_whenRetryClicked_thenOnRetryClickCalled() {
+    fun givenErrorState_whenRetryClicked_thenShowErrorAndCallOnRetryClick() {
         // given
         var retryClicked = false
         val uiState = PropertyListUiState.Error
@@ -93,6 +74,12 @@ class PropertyListScreenTest {
                 )
             }
         }
+
+        // then
+        composeTestRule.onNodeWithTag(PropertyListTestTags.ERROR_CONTENT).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Retry").assertIsDisplayed()
+
+        // when
         composeTestRule.onNodeWithText("Retry").performClick()
 
         // then
@@ -107,13 +94,15 @@ class PropertyListScreenTest {
                 id = "1",
                 title = "Luxury Apartment",
                 formattedPrice = "CHF 750,000",
-                formattedAddress = "Main Street 10, 8000 Zurich"
+                formattedAddress = "Main Street 10, 8000 Zurich",
+                isLiked = true
             ),
             createTestProperty(
                 id = "2",
                 title = "Modern Villa",
                 formattedPrice = "CHF 1,200,000",
-                formattedAddress = "Lake Road 5, 6000 Lucerne"
+                formattedAddress = "Lake Road 5, 6000 Lucerne",
+                isLiked = false
             )
         )
         val uiState = PropertyListUiState.Success(properties)
@@ -123,7 +112,6 @@ class PropertyListScreenTest {
             SimpleRealEstateTheme {
                 PropertyListContent(
                     uiState = uiState,
-                    onRetryClick = {}
                 )
             }
         }
@@ -133,12 +121,14 @@ class PropertyListScreenTest {
         composeTestRule.assertPropertyItemDisplayed(
             title = "Luxury Apartment",
             price = "CHF 750,000",
-            address = "Main Street 10, 8000 Zurich"
+            address = "Main Street 10, 8000 Zurich",
+            isLiked = true
         )
         composeTestRule.assertPropertyItemDisplayed(
             title = "Modern Villa",
             price = "CHF 1,200,000",
-            address = "Lake Road 5, 6000 Lucerne"
+            address = "Lake Road 5, 6000 Lucerne",
+            isLiked = false
         )
     }
 
@@ -152,12 +142,42 @@ class PropertyListScreenTest {
             SimpleRealEstateTheme {
                 PropertyListContent(
                     uiState = uiState,
-                    onRetryClick = {}
                 )
             }
         }
 
         // then
         composeTestRule.onNodeWithTag(PropertyListTestTags.PROPERTY_LIST).assertIsDisplayed()
+    }
+
+    @Test
+    fun givenSuccessState_whenLikeButtonClicked_thenUpdateLikedState() {
+        // given
+        val property = createTestProperty(isLiked = false)
+        val uiState = mutableStateOf(PropertyListUiState.Success(listOf(property)))
+
+        composeTestRule.setContent {
+            SimpleRealEstateTheme {
+                PropertyListContent(
+                    uiState = uiState.value,
+                    onLikeClick = { propertyId ->
+                        val currentState = uiState.value
+                        val updatedProperties = currentState.properties.map {
+                            if (it.id == propertyId) it.copy(isLiked = !it.isLiked) else it
+                        }
+                        uiState.value = PropertyListUiState.Success(updatedProperties)
+                    }
+                )
+            }
+        }
+
+        // then
+        composeTestRule.onNodeWithContentDescription("Add to liked").assertIsDisplayed()
+
+        // when
+        composeTestRule.onNodeWithContentDescription("Add to liked").performClick()
+
+        // then
+        composeTestRule.onNodeWithContentDescription("Remove from liked").assertIsDisplayed()
     }
 }

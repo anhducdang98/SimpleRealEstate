@@ -36,7 +36,7 @@ import com.example.simplerealestate.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PropertyListScreen(
-    viewModel: PropertyListViewModel = hiltViewModel()
+    viewModel: PropertyListViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -50,6 +50,9 @@ fun PropertyListScreen(
         PropertyListContent(
             uiState = uiState,
             onRetryClick = { viewModel.loadProperties() },
+            onLikeClick = { propertyId ->
+                viewModel.onEvent(PropertyListEvent.ToggleLike(propertyId))
+            },
             modifier = Modifier.padding(paddingValues)
         )
     }
@@ -57,9 +60,10 @@ fun PropertyListScreen(
 
 @Composable
 fun PropertyListContent(
+    modifier: Modifier = Modifier,
     uiState: PropertyListUiState,
-    onRetryClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onRetryClick: () -> Unit = {},
+    onLikeClick: (String) -> Unit = {},
 ) {
     Box(
         modifier = modifier.fillMaxSize()
@@ -68,6 +72,7 @@ fun PropertyListContent(
             is PropertyListUiState.Initial -> {
                 // Display nothing for initial state
             }
+
             is PropertyListUiState.Loading -> {
                 CircularProgressIndicator(
                     modifier = Modifier
@@ -76,6 +81,7 @@ fun PropertyListContent(
                         .testTag(PropertyListTestTags.LOADING_INDICATOR)
                 )
             }
+
             is PropertyListUiState.Error -> {
                 Column(
                     modifier = Modifier
@@ -94,6 +100,7 @@ fun PropertyListContent(
                     }
                 }
             }
+
             is PropertyListUiState.Success -> {
                 LazyColumn(
                     modifier = Modifier.testTag(PropertyListTestTags.PROPERTY_LIST),
@@ -104,7 +111,10 @@ fun PropertyListContent(
                         items = uiState.properties,
                         key = { it.id }
                     ) { property ->
-                        PropertyItem(property = property)
+                        PropertyItem(
+                            property = property,
+                            onLikeClick = onLikeClick
+                        )
                     }
                 }
             }
