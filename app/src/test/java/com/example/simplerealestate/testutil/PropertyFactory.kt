@@ -20,12 +20,13 @@ object PropertyFactory {
 
     fun createProperty(
         id: String = "1",
-        title: String = "Test Property",
-        price: Long = 500000L,
-        formattedPrice: String = "CHF 500,000",
-        street: String = "Test Street 1",
-        locality: String = "Zurich",
-        postalCode: String = "8000",
+        title: String = "Luxuriöses Einfamilienhaus mit Pool - Musterinserat",
+        price: Long = 9999999L,
+        formattedPrice: String = "CHF 9,999,999",
+        street: String = "Musterstrasse 999",
+        locality: String = "La Brévine",
+        postalCode: String = "2406",
+        region: String = "NE",
         imageUrl: String = "https://example.com/image.jpg",
         isLiked: Boolean = false
     ): Property {
@@ -37,9 +38,9 @@ object PropertyFactory {
                 prices = Prices(
                     currency = "CHF",
                     buy = BuyPrice(
-                        area = null,
+                        area = "ALL",
                         price = price,
-                        interval = null
+                        interval = "ONETIME"
                     ),
                     formattedPrice = formattedPrice
                 ),
@@ -47,9 +48,9 @@ object PropertyFactory {
                     country = "CH",
                     locality = locality,
                     postalCode = postalCode,
-                    region = "ZH",
+                    region = region,
                     street = street,
-                    formattedAddress = "$street, $postalCode $locality"
+                    formattedAddress = "$street, $locality, $region"
                 ),
                 localization = Localization(
                     de = LocalizedContent(

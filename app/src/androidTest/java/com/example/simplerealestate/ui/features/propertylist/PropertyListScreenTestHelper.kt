@@ -39,9 +39,9 @@ fun ComposeTestRule.assertPropertyItemDisplayed(
 
 fun createTestProperty(
     id: String = "1",
-    title: String = "Test Property",
-    formattedPrice: String = "CHF 500,000",
-    formattedAddress: String = "Test Street 1, 8000 Zurich",
+    title: String = "Luxuriöses Einfamilienhaus mit Pool - Musterinserat",
+    formattedPrice: String = "CHF 9,999,999",
+    formattedAddress: String = "Musterstrasse 999, La Brévine, NE",
     isLiked: Boolean = false
 ): Property {
     return Property(
@@ -52,18 +52,18 @@ fun createTestProperty(
             prices = Prices(
                 currency = "CHF",
                 buy = BuyPrice(
-                    area = null,
-                    price = 500000L,
-                    interval = null
+                    area = "ALL",
+                    price = 9999999L,
+                    interval = "ONETIME"
                 ),
                 formattedPrice = formattedPrice
             ),
             address = PropertyAddress(
                 country = "CH",
-                locality = "Zurich",
-                postalCode = "8000",
-                region = "ZH",
-                street = "Test Street 1",
+                locality = "La Brévine",
+                postalCode = "2406",
+                region = "NE",
+                street = "Musterstrasse 999",
                 formattedAddress = formattedAddress
             ),
             localization = Localization(
