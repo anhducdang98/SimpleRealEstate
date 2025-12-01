@@ -1,6 +1,9 @@
 package com.example.simplerealestate.ui.features.propertylist
 
 import app.cash.turbine.test
+import com.example.simplerealestate.ui.features.propertylist.viewmodel.PropertyListEvent
+import com.example.simplerealestate.ui.features.propertylist.viewmodel.PropertyListUiState
+import com.example.simplerealestate.ui.features.propertylist.viewmodel.PropertyListViewModel
 import com.example.simplerealestate.core.util.Resource
 import com.example.simplerealestate.domain.usecase.GetPropertiesUseCase
 import com.example.simplerealestate.domain.usecase.ToggleLikeUseCase

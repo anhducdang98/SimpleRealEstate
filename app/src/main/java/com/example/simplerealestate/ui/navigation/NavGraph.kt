@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.simplerealestate.ui.features.propertylist.PropertyListScreen
+import com.example.simplerealestate.ui.features.propertylist.screen.PropertyListScreen
 
 /**
  * @author Dang Anh Duc

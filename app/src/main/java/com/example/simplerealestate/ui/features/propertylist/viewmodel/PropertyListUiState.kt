@@ -1,4 +1,4 @@
-package com.example.simplerealestate.ui.features.propertylist
+package com.example.simplerealestate.ui.features.propertylist.viewmodel
 
 import androidx.compose.runtime.Stable
 import com.example.simplerealestate.domain.model.Property

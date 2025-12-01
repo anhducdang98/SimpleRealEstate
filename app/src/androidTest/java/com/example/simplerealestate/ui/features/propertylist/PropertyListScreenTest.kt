@@ -1,6 +1,8 @@
 package com.example.simplerealestate.ui.features.propertylist
 
 import androidx.compose.runtime.mutableStateOf
+import com.example.simplerealestate.ui.features.propertylist.screen.PropertyListContent
+import com.example.simplerealestate.ui.features.propertylist.viewmodel.PropertyListUiState
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -133,8 +135,9 @@ class PropertyListScreenTest {
     }
 
     @Test
-    fun givenSuccessStateWithEmptyList_whenScreenDisplayed_thenShowEmptyPropertyList() {
+    fun givenSuccessStateWithEmptyList_whenScreenDisplayed_thenShowEmptyContent() {
         // given
+        var reloadClicked = false
         val uiState = PropertyListUiState.Success(emptyList())
 
         // when
@@ -142,12 +145,21 @@ class PropertyListScreenTest {
             SimpleRealEstateTheme {
                 PropertyListContent(
                     uiState = uiState,
+                    onRetryClick = { reloadClicked = true }
                 )
             }
         }
 
         // then
-        composeTestRule.onNodeWithTag(PropertyListTestTags.PROPERTY_LIST).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(PropertyListTestTags.EMPTY_CONTENT).assertIsDisplayed()
+        composeTestRule.onNodeWithText("No properties available").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Reload").assertIsDisplayed()
+
+        // when
+        composeTestRule.onNodeWithText("Reload").performClick()
+
+        // then
+        assert(reloadClicked)
     }
 
     @Test

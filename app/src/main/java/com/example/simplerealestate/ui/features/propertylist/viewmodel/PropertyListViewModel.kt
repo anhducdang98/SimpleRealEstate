@@ -1,4 +1,4 @@
-package com.example.simplerealestate.ui.features.propertylist
+package com.example.simplerealestate.ui.features.propertylist.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

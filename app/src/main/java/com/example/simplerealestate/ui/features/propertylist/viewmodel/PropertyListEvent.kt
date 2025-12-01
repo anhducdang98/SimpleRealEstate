@@ -1,4 +1,4 @@
-package com.example.simplerealestate.ui.features.propertylist
+package com.example.simplerealestate.ui.features.propertylist.viewmodel
 
 /**
  * @author Dang Anh Duc
