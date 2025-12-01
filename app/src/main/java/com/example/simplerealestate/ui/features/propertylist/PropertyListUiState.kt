@@ -9,6 +9,7 @@ import com.example.simplerealestate.domain.model.Property
  */
 @Stable
 sealed class PropertyListUiState {
+    data object Initial : PropertyListUiState()
     data object Loading : PropertyListUiState()
     data class Success(val properties: List<Property>) : PropertyListUiState()
     data object Error : PropertyListUiState()

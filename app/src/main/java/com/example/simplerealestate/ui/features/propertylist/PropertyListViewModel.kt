@@ -21,7 +21,7 @@ class PropertyListViewModel @Inject constructor(
     private val getPropertiesUseCase: GetPropertiesUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<PropertyListUiState>(PropertyListUiState.Loading)
+    private val _uiState = MutableStateFlow<PropertyListUiState>(PropertyListUiState.Initial)
     val uiState: StateFlow<PropertyListUiState> = _uiState.asStateFlow()
 
     init {

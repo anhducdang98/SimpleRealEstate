@@ -36,8 +36,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
     buildFeatures {
         compose = true
@@ -66,6 +68,7 @@ dependencies {
 
     // Hilt - Dependency Injection
     implementation(libs.hilt.android)
+    androidTestImplementation(project(":app"))
     ksp(libs.hilt.android.compiler)
 
     // Networking
@@ -81,6 +84,10 @@ dependencies {
 
     // Testing - Unit Tests
     testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 
     // Testing - Instrumented Tests
     androidTestImplementation(libs.androidx.junit)
