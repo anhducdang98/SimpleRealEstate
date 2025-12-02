@@ -27,7 +27,6 @@ object PropertyFactory {
         locality: String = "La Brévine",
         postalCode: String = "2406",
         region: String = "NE",
-        imageUrl: String = "https://example.com/image.jpg",
         isLiked: Boolean = false
     ): Property {
         return Property(
@@ -57,11 +56,11 @@ object PropertyFactory {
                         attachments = listOf(
                             Attachment(
                                 type = AttachmentType.IMAGE,
-                                url = imageUrl
+                                url = "https://example.com/image.jpg"
                             )
                         ),
                         text = Text(title = title),
-                        bannerImage = imageUrl
+                        bannerImage = "https://example.com/image.jpg"
                     )
                 )
             ),

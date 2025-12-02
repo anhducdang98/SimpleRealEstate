@@ -106,7 +106,7 @@ class PropertyMapperTest {
         region: String = "NE",
         currency: String = "CHF",
         price: Long = 9999999,
-        imageUrl: String = "https://media2.homegate.ch/listings/heia/104123262/image/6b53db714891bfe2321cc3a6d4af76e1.jpg",
+        imageUrl: String = "https://example.com/image.jpg",
         title: String = "Luxuriöses Einfamilienhaus mit Pool - Musterinserat"
     ): PropertyResultDto {
         return PropertyResultDto(
@@ -140,7 +140,7 @@ class PropertyMapperTest {
                     primary = "de",
                     de = LocalizedContentDto(
                         attachments = listOf(
-                            AttachmentDto(type = "IMAGE", url = imageUrl, file = "201705241056461331496.jpg")
+                            AttachmentDto(type = "IMAGE", url = imageUrl, file = "image.jpg")
                         ),
                         text = TextDto(title = title, description = null),
                         urls = emptyList()

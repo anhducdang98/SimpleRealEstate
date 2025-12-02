@@ -165,7 +165,7 @@ class PropertyListScreenTest {
     @Test
     fun givenSuccessState_whenLikeButtonClicked_thenUpdateLikedState() {
         // given
-        val property = createTestProperty(isLiked = false)
+        val property = createTestProperty()
         val uiState = mutableStateOf(PropertyListUiState.Success(listOf(property)))
 
         composeTestRule.setContent {

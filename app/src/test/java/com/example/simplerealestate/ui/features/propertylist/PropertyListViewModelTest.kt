@@ -112,7 +112,7 @@ class PropertyListViewModelTest {
     fun givenSuccessState_whenToggleLike_thenPropertyLikedStateUpdated() = runTest {
         // given
         val propertyId = "1"
-        val property = PropertyFactory.createProperty(id = propertyId, isLiked = false)
+        val property = PropertyFactory.createProperty(id = propertyId)
         whenever(getPropertiesUseCase()).thenReturn(flow {
             emit(Resource.Success(listOf(property)))
         })
